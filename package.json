@@ -1,8 +1,16 @@
 {
   "name": "szeged-pizza-scraper",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mywebstuff/szeged-pizza-scraper"
+  },
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
+  "scripts": {
+    "add-new-pizza-place": "node app/bin/add-new-pizza-place.js",
+    "scrape-pizza-places": "node app/bin/scrape-pizza-places.js"
+  },
   "dependencies": {
     "axios": "^0.18.0",
     "cheerio": "^1.0.0-rc.2",
