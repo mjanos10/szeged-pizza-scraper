@@ -20,10 +20,14 @@ const getFood = $el => {
 
 const getDataFromOnePizza = $el => {
 	const foodsAndBase = getFood($el);
+	const name = $el.find(config.nameSelector).text();
 	const price = $el.find(config.priceSelector).text().replace(/\D/g,'');
 	return {
-		name: $el.find(config.nameSelector).text(),
-		price: Number(price) || 0,
+		name: name.trim(),
+		prices: [{
+			size: name.includes('60 cm') ? 60 : 28,
+			price: Number(price) || 0,
+		}],
 		imgUrl: config.baseUrl + $el.find(config.imgSelector).attr('src'),
 		toppings: foodsAndBase.foods,
 		base: foodsAndBase.base
