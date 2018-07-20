@@ -47,11 +47,6 @@ const prompts = [
 		name: 'handler',
 		message: 'The name of the scraper file?'
 	},
-	{
-		type: 'input',
-		name: 'sizes',
-		message: 'What sizes are the pizzas? (only numbers, separated by a comma)'
-	}
 ];
 
 const run = async () => {
@@ -60,7 +55,6 @@ const run = async () => {
 
 		const answers = await inquirer.prompt(prompts);
 
-		const sizes = answers.sizes.split(',').map(Number);
 		const phoneNumbers = answers.phoneNumbers.split(',').map(number => {
 			return utils.removeAllWhiteSpace(number);
 		});
@@ -72,7 +66,6 @@ const run = async () => {
 			houseNumber: answers.houseNumber,
 			website: answers.website,
 			phoneNumbers: phoneNumbers,
-			pizzaSizes: sizes,
 			handler: answers.handler
 		});
 

@@ -33,10 +33,6 @@ const PizzaPlaceSchema = new mongoose.Schema({
 		type: String,
 		required: true,
 	},
-	pizzaSizes: {
-		type: [Number],
-		required: true,
-	},
 	lastScraped: {
 		type: Date,
 	}
