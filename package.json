@@ -13,6 +13,7 @@
     "scrape-pizza-places": "node app/bin/scrape-pizza-places.js"
   },
   "dependencies": {
+    "@moebius/http-graceful-shutdown": "^1.1.0",
     "axios": "^0.18.0",
     "cheerio": "^1.0.0-rc.2",
     "eslint": "^5.1.0",

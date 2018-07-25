@@ -45,18 +45,46 @@ const buildPizzaData = $ => {
 	return pizzaData;
 };
 
+const processOnePage = async (size, url) => {
+	const { data: body } = await axios.get(url);
+
+	const $ = cheerio.load(body);
+
+	const data = buildPizzaData($);
+
+	return {
+		pizzaList: data,
+		size
+	};
+};
+
 const scrape = async () => {
 	try {
-		console.log(`Loading site at ${config.baseUrl}`);
-		const { data: body } = await axios.get(config.baseUrl);
-		
-		console.log(`Site loaded`);
-		const $ = cheerio.load(body);
-		
-		console.log(`Building pizza data`);
-		const data = buildPizzaData($);
-		
-		console.log(`Scraping finished for Pizza Torony`);
+
+		const results = await Promise.all(
+			config.urls.map(site => processOnePage(site.size, site.url))
+		);
+
+		const data = [];
+
+		results.map(oneSize => {
+			oneSize.pizzaList.map(onePizza => {
+				const foundPizza = data.find(pizza => pizza.name === onePizza.name);
+				if (foundPizza) {
+					foundPizza.prices.push({ size: oneSize.size, price: onePizza.price });
+				} else {
+					const price = onePizza.price;
+					delete onePizza.price;
+					onePizza.prices = [{ size: oneSize.size, price }];
+					data.push(onePizza);
+				}
+			});
+		});
+
+		// const data = results.reduce((allPizzas, oneSize) => {
+		// 	return allPizzas.find(pizza => pizza.name === oneSize)
+		// }, []);
+
 		return data;
 	} catch (error) {
 		console.error(error);
@@ -64,3 +92,4 @@ const scrape = async () => {
 };
 
 module.exports = scrape;
+

@@ -4,6 +4,11 @@ module.exports = {
 	database: {
 		url: 'mongodb://localhost:27017/szeged-pizza'
 	},
+	availableScrapers: [
+		'pizza-forte',
+		'pizza-futar',
+		'pizza-torony'
+	],
 	pizzaPlaces: {
 		pizzaFutar: {
 			baseUrl: 'http://www.pizzafutar.co.hu/',
@@ -15,7 +20,24 @@ module.exports = {
 			foodSelector: '.feltet_lista'
 		},
 		pizzaTorony: {
-			baseUrl: 'http://www.pizzatoronyszeged.hu/webshop/Pizza_30_cm',
+			urls: [
+				{
+					size: 20,
+					url: 'http://www.pizzatoronyszeged.hu/webshop/Pizza_20_cm'
+				},
+				{
+					size: 26,
+					url: 'http://www.pizzatoronyszeged.hu/webshop/Pizza_26_cm'
+				},
+				{
+					size: 30,
+					url: 'http://www.pizzatoronyszeged.hu/webshop/Pizza_30_cm'
+				},
+				{
+					size: 50,
+					url: 'http://www.pizzatoronyszeged.hu/webshop/Pizza_50_cm'
+				}
+			],
 			elemSelector: '.product_box',
 			nameSelector: '.product_name',
 			priceSelector: '.product_price',

@@ -30,19 +30,23 @@ const shutdownAll = server => {
 
 const registerListeners = server => {
 	
-	const callback = evt => {
+	const callback = (evt, error) => {
 		console.log(`Running shutdown after event ${evt}`);
+		if (error) {
+			console.error(error);
+		}
 		shutdownAll(server).then(() => {
 			console.log(`Shutdown finished after ${evt}`);
 		}).catch(err => {
 			console.error(`An error occured during shutdown from event ${evt}`);
+			console.error(err);
 		});
 	};
 
-	process.on('SIGTERM', () => callback('SIGTERM'));
-	process.on('SIGINT', () => callback('SIGINT'));
-	process.on('uncaughtException', () => callback('uncaughtException'));
-	process.on('unhandledRejection', () => callback('unhandledRejection'));
+	process.on('SIGTERM', err => callback('SIGTERM', err));
+	process.on('SIGINT', err => callback('SIGINT', err));
+	process.on('uncaughtException', err => callback('uncaughtException', err));
+	process.on('unhandledRejection', err => callback('unhandledRejection', err));
 };
 
 module.exports = {

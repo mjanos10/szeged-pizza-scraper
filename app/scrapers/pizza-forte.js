@@ -62,5 +62,5 @@ const scrape = async () => {
 	}
 };
 
-// module.exports = scrape;
-scrape();
+module.exports = scrape;
+// scrape();

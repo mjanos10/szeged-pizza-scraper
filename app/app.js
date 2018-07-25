@@ -5,6 +5,8 @@ const mongoose = require('mongoose');
 const GracefulShutdownManager = require('@moebius/http-graceful-shutdown').GracefulShutdownManager;
 const shutdown = require('./shutdown');
 const config = require('./config');
+const { validateScraper } = require('./middlewares');
+const scrapers = require('./scrapers');
 
 const app = express();
 const shutdownManager = new GracefulShutdownManager(app);
@@ -14,5 +16,16 @@ shutdown.registerListeners(shutdownManager);
 mongoose.connect(config.database.url, { useNewUrlParser: true });
 
 app.get('/', (req, res) => res.send('Hello World!'));
+
+app.get('/scrape/:scraper', validateScraper, async (req, res) => {
+	
+	try {
+		const result = await scrapers[req.params.scraper]();
+		return res.json(result);
+	} catch (e) {
+		console.error(e);
+		return res.json(e);
+	}
+});
 
 app.listen(3000, () => console.log('Example app listening on port 3000!'));
