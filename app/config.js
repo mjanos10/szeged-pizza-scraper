@@ -50,7 +50,7 @@ module.exports = {
 			elemSelector: 'td .product_info_panel',
 			nameSelector: 'h3',
 			toppingsSelector: 'h3 + p',
-			priceSelector: '.pizza_size_button:last-of-type b'
+			priceAndSizeSelector: '.pizza_size_button'
 		}
 	}
 };
