@@ -9,9 +9,6 @@ const { validateScraper } = require('./middlewares');
 const scrapers = require('./scrapers');
 
 const app = express();
-const shutdownManager = new GracefulShutdownManager(app);
-
-shutdown.registerListeners(shutdownManager);
 
 mongoose.connect(config.database.url, { useNewUrlParser: true });
 
@@ -28,4 +25,8 @@ app.get('/scrape/:scraper', validateScraper, async (req, res) => {
 	}
 });
 
-app.listen(3000, () => console.log('Example app listening on port 3000!'));
+const server = app.listen(3000, () => console.log('Example app listening on port 3000!'));
+
+const shutdownManager = new GracefulShutdownManager(server);
+
+shutdown.registerListeners(shutdownManager);
