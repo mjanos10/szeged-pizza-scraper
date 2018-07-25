@@ -7,7 +7,8 @@ module.exports = {
 	availableScrapers: [
 		'pizza-forte',
 		'pizza-futar',
-		'pizza-torony'
+		'pizza-torony',
+		'margareta-pizza'
 	],
 	pizzaPlaces: {
 		pizzaFutar: {
@@ -51,6 +52,9 @@ module.exports = {
 			nameSelector: 'h3',
 			toppingsSelector: 'h3 + p',
 			priceAndSizeSelector: '.pizza_size_button'
+		},
+		margaretaPizza: {
+			sitemapUrl: 'https://www.margaretapizza.hu/sitemap.xml',
 		}
 	}
 };
