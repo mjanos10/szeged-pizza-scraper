@@ -20,17 +20,17 @@ const prompts = [
 		type: 'input',
 		name: 'city',
 		message: 'City?',
-		default: 'Szeged'
+		default: 'Szeged',
 	},
 	{
 		type: 'input',
 		name: 'street',
-		message: 'Street?'
+		message: 'Street?',
 	},
 	{
 		type: 'input',
 		name: 'houseNumber',
-		message: 'House Number?'
+		message: 'House Number?',
 	},
 	{
 		type: 'input',
@@ -45,13 +45,18 @@ const prompts = [
 	{
 		type: 'input',
 		name: 'handler',
-		message: 'The name of the scraper file?'
+		message: 'The name of the scraper file?',
 	},
 ];
 
 const run = async () => {
 	try {
-		await mongoose.connect(config.get('database.url'), { useNewUrlParser: true });
+		await mongoose.connect(
+			config.get('database.url'),
+			{
+				useNewUrlParser: true,
+			}
+		);
 
 		const answers = await inquirer.prompt(prompts);
 
@@ -66,7 +71,7 @@ const run = async () => {
 			houseNumber: answers.houseNumber,
 			website: answers.website,
 			phoneNumbers: phoneNumbers,
-			handler: answers.handler
+			handler: answers.handler,
 		});
 
 		const result = await pizzaPlace.save();
@@ -77,8 +82,10 @@ const run = async () => {
 	}
 };
 
-
-run().then(() => shutdown.shutdownDatabase()).then(() => process.exit()).catch(err => {
-	console.error(err);
-	process.exit();
-});
+run()
+	.then(() => shutdown.shutdownDatabase())
+	.then(() => process.exit())
+	.catch(err => {
+		console.error(err);
+		process.exit();
+	});

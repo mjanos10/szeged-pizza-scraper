@@ -8,7 +8,7 @@ const toTitleCase = str => {
 	return str.join(' ');
 };
 
-const removeAllWhiteSpace = str => str.replace(/\s/g,'');
+const removeAllWhiteSpace = str => str.replace(/\s/g, '');
 
 module.exports = {
 	toTitleCase,

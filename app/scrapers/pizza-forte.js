@@ -8,7 +8,7 @@ const pizzaPlaceConfig = config.util.toObject(config.get('pizzaPlaces.pizzaForte
 const { toTitleCase } = require('../utils/utils');
 
 const getPrice = priceString => {
-	return priceString.replace(/\D/g,'');
+	return priceString.replace(/\D/g, '');
 };
 
 const getPriceAndSize = ($, buttons) => {
@@ -16,8 +16,15 @@ const getPriceAndSize = ($, buttons) => {
 
 	$(buttons).each((i, button) => {
 		prices.unshift({
-			size: $(button).html().split('CM')[0].trim(),
-			price: getPrice($(button).find('b').text())
+			size: $(button)
+				.html()
+				.split('CM')[0]
+				.trim(),
+			price: getPrice(
+				$(button)
+					.find('b')
+					.text()
+			),
 		});
 	});
 
@@ -29,7 +36,10 @@ const getName = nameString => {
 };
 
 const getToppingsAndBase = toppingsAndBaseString => {
-	const [base, ...toppings] = toppingsAndBaseString.replace('(', '').replace(')', '').split(', ');
+	const [base, ...toppings] = toppingsAndBaseString
+		.replace('(', '')
+		.replace(')', '')
+		.split(', ');
 	return {
 		toppings: toppings.map(topping => topping.trim()),
 		base: toTitleCase(base.trim()),
@@ -48,7 +58,7 @@ const getDataFromOnePizzaElement = ($, el) => {
 		prices: prices,
 		imgUrl: $el.find(pizzaPlaceConfig.imgSelector).attr('src'),
 		toppings: toppings,
-		base: base
+		base: base,
 	};
 };
 
@@ -65,13 +75,13 @@ const scrape = async () => {
 	try {
 		console.log(`Loading site at ${pizzaPlaceConfig.baseUrl}`);
 		const { data: body } = await axios.get(pizzaPlaceConfig.baseUrl);
-		
+
 		console.log(`Site loaded`);
 		const $ = cheerio.load(body);
-		
+
 		console.log(`Building pizza data`);
 		const data = buildPizzaData($);
-		
+
 		console.log(`Scraping finished for Pizza Forte`);
 		console.log(JSON.stringify(data, null, 2));
 		return data;

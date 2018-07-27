@@ -8,11 +8,14 @@ const pizzaPlaceConfig = config.util.toObject(config.get('pizzaPlaces.pizzaToron
 const { toTitleCase } = require('../utils/utils');
 
 const getPrice = priceString => {
-	return priceString.replace(/\D/g,'');
+	return priceString.replace(/\D/g, '');
 };
 
 const getName = nameString => {
-	const name = nameString.split('. ')[1].split('(')[0].toLowerCase();
+	const name = nameString
+		.split('. ')[1]
+		.split('(')[0]
+		.toLowerCase();
 	return toTitleCase(name);
 };
 
@@ -33,7 +36,7 @@ const getDataFromOnePizzaElement = $el => {
 		price: Number(price) || 0,
 		imgUrl: $el.find(pizzaPlaceConfig.imgSelector).attr('src'),
 		toppings: toppings,
-		base: base
+		base: base,
 	};
 };
 
@@ -55,13 +58,12 @@ const processOnePage = async (size, url) => {
 
 	return {
 		pizzaList: data,
-		size
+		size,
 	};
 };
 
 const scrape = async () => {
 	try {
-
 		const results = await Promise.all(
 			pizzaPlaceConfig.urls.map(site => processOnePage(site.size, site.url))
 		);
@@ -72,11 +74,19 @@ const scrape = async () => {
 			oneSize.pizzaList.map(onePizza => {
 				const foundPizza = data.find(pizza => pizza.name === onePizza.name);
 				if (foundPizza) {
-					foundPizza.prices.push({ size: oneSize.size, price: onePizza.price });
+					foundPizza.prices.push({
+						size: oneSize.size,
+						price: onePizza.price,
+					});
 				} else {
 					const price = onePizza.price;
 					delete onePizza.price;
-					onePizza.prices = [{ size: oneSize.size, price }];
+					onePizza.prices = [
+						{
+							size: oneSize.size,
+							price,
+						},
+					];
 					data.push(onePizza);
 				}
 			});
@@ -93,4 +103,3 @@ const scrape = async () => {
 };
 
 module.exports = scrape;
-

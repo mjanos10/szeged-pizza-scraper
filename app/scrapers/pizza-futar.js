@@ -15,23 +15,28 @@ const getFood = $el => {
 	const base = split[split.length - 1].split('Alap:')[1];
 	return {
 		foods: foods.split(',').map(food => food.trim()),
-		base
+		base,
 	};
 };
 
 const getDataFromOnePizza = $el => {
 	const foodsAndBase = getFood($el);
 	const name = $el.find(pizzaPlaceConfig.nameSelector).text();
-	const price = $el.find(pizzaPlaceConfig.priceSelector).text().replace(/\D/g,'');
+	const price = $el
+		.find(pizzaPlaceConfig.priceSelector)
+		.text()
+		.replace(/\D/g, '');
 	return {
 		name: name.trim(),
-		prices: [{
-			size: name.includes('60 cm') ? 60 : 28,
-			price: Number(price) || 0,
-		}],
+		prices: [
+			{
+				size: name.includes('60 cm') ? 60 : 28,
+				price: Number(price) || 0,
+			},
+		],
 		imgUrl: pizzaPlaceConfig.baseUrl + $el.find(pizzaPlaceConfig.imgSelector).attr('src'),
 		toppings: foodsAndBase.foods,
-		base: foodsAndBase.base
+		base: foodsAndBase.base,
 	};
 };
 
@@ -56,7 +61,9 @@ const buildPizzaData = async ($, shownPerPage) => {
 	const linksToVisit = [];
 	listElems.each((i, el) => {
 		if (i + 1 === visited + shownPerPage) {
-			const link = $(el).find('a').attr('href');
+			const link = $(el)
+				.find('a')
+				.attr('href');
 			linksToVisit.push(`${pizzaPlaceConfig.baseUrl}${link}`);
 			visited += shownPerPage;
 		}
@@ -74,7 +81,6 @@ const scrape = async () => {
 		const shownPerPage = getCountOf($, pizzaPlaceConfig.elemSelector);
 		const data = await buildPizzaData($, shownPerPage);
 		return data;
-
 	} catch (error) {
 		console.error(error);
 	}

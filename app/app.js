@@ -12,12 +12,16 @@ const scrapers = require('./scrapers');
 
 const app = express();
 
-mongoose.connect(config.get('database.url'), { useNewUrlParser: true });
+mongoose.connect(
+	config.get('database.url'),
+	{
+		useNewUrlParser: true,
+	}
+);
 
 app.get('/', (req, res) => res.send('Hello World!'));
 
 app.get('/scrape/:scraper', validateScraper, async (req, res) => {
-	
 	try {
 		const result = await scrapers[req.params.scraper]();
 		return res.json(result);
