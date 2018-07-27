@@ -63,6 +63,7 @@ const buildPizzaData = $ => {
 
 const scrape = async () => {
 	try {
+		
 		console.log(`Loading site at ${pizzaPlaceConfig.baseUrl}`);
 		const { data: body } = await axios.get(pizzaPlaceConfig.baseUrl);
 		

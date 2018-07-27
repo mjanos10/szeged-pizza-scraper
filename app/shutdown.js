@@ -37,9 +37,11 @@ const registerListeners = server => {
 		}
 		shutdownAll(server).then(() => {
 			console.log(`Shutdown finished after ${evt}`);
+			process.kill(process.pid, evt);
 		}).catch(err => {
 			console.error(`An error occured during shutdown from event ${evt}`);
 			console.error(err);
+			process.kill(process.pid, evt);
 		});
 	};
 
@@ -47,6 +49,8 @@ const registerListeners = server => {
 	process.on('SIGINT', err => callback('SIGINT', err));
 	process.on('uncaughtException', err => callback('uncaughtException', err));
 	process.on('unhandledRejection', err => callback('unhandledRejection', err));
+	process.once('SIGUSR2', err => callback('SIGUSR2', err));
+
 };
 
 module.exports = {
