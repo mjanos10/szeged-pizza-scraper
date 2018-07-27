@@ -3,12 +3,13 @@
 const xmlToJs = require('xml-js');
 const axios = require('axios');
 
-const config = require('../config');
+const config = require('config');
+const pizzaPlaceConfig = config.util.toObject(config.get('pizzaPlaces.margaretaPizza'));
 
 const scrape = async () => {
 	try {
 		
-		const { data } = await axios.get(config.pizzaPlaces.margaretaPizza.sitemapUrl);
+		const { data } = await axios.get(pizzaPlaceConfig.sitemapUrl);
 		const result = xmlToJs.xml2js(data, { compact: true, ignoreAttributes: true, ignoreDeclaration: true });
 		const pizzaUrls = result.urlset.url.map(url => {
 			return {

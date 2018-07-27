@@ -3,7 +3,8 @@
 const axios = require('axios');
 const cheerio = require('cheerio');
 
-const config = require('../config').pizzaPlaces.pizzaTorony;
+const config = require('config');
+const pizzaPlaceConfig = config.util.toObject(config.get('pizzaPlaces.pizzaTorony'));
 const { toTitleCase } = require('../utils/utils');
 
 const getPrice = priceString => {
@@ -24,20 +25,20 @@ const getToppingsAndBase = toppingsAndBaseString => {
 };
 
 const getDataFromOnePizzaElement = $el => {
-	const price = getPrice($el.find(config.priceSelector).text());
-	const name = getName($el.find(config.nameSelector).text());
-	const { toppings, base } = getToppingsAndBase($el.find(config.toppingsSelector).text());
+	const price = getPrice($el.find(pizzaPlaceConfig.priceSelector).text());
+	const name = getName($el.find(pizzaPlaceConfig.nameSelector).text());
+	const { toppings, base } = getToppingsAndBase($el.find(pizzaPlaceConfig.toppingsSelector).text());
 	return {
 		name: name.trim(),
 		price: Number(price) || 0,
-		imgUrl: $el.find(config.imgSelector).attr('src'),
+		imgUrl: $el.find(pizzaPlaceConfig.imgSelector).attr('src'),
 		toppings: toppings,
 		base: base
 	};
 };
 
 const buildPizzaData = $ => {
-	const pizzaElems = $(config.elemSelector);
+	const pizzaElems = $(pizzaPlaceConfig.elemSelector);
 	const pizzaData = [];
 	pizzaElems.each((i, el) => {
 		pizzaData.push(getDataFromOnePizzaElement($(el)));
@@ -62,7 +63,7 @@ const scrape = async () => {
 	try {
 
 		const results = await Promise.all(
-			config.urls.map(site => processOnePage(site.size, site.url))
+			pizzaPlaceConfig.urls.map(site => processOnePage(site.size, site.url))
 		);
 
 		const data = [];

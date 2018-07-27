@@ -3,12 +3,13 @@
 const axios = require('axios');
 const cheerio = require('cheerio');
 
-const config = require('../config').pizzaPlaces.pizzaFutar;
+const config = require('config');
+const pizzaPlaceConfig = config.util.toObject(config.get('pizzaPlaces.pizzaFutar'));
 
 const getCountOf = ($, selector) => $(selector).length;
 
 const getFood = $el => {
-	const fullText = $el.find(config.foodSelector).text();
+	const fullText = $el.find(pizzaPlaceConfig.foodSelector).text();
 	const split = fullText.split('\t');
 	const foods = split[0];
 	const base = split[split.length - 1].split('Alap:')[1];
@@ -20,15 +21,15 @@ const getFood = $el => {
 
 const getDataFromOnePizza = $el => {
 	const foodsAndBase = getFood($el);
-	const name = $el.find(config.nameSelector).text();
-	const price = $el.find(config.priceSelector).text().replace(/\D/g,'');
+	const name = $el.find(pizzaPlaceConfig.nameSelector).text();
+	const price = $el.find(pizzaPlaceConfig.priceSelector).text().replace(/\D/g,'');
 	return {
 		name: name.trim(),
 		prices: [{
 			size: name.includes('60 cm') ? 60 : 28,
 			price: Number(price) || 0,
 		}],
-		imgUrl: config.baseUrl + $el.find(config.imgSelector).attr('src'),
+		imgUrl: pizzaPlaceConfig.baseUrl + $el.find(pizzaPlaceConfig.imgSelector).attr('src'),
 		toppings: foodsAndBase.foods,
 		base: foodsAndBase.base
 	};
@@ -38,7 +39,7 @@ const getPizzasFromOneIteration = async link => {
 	try {
 		const { data: body } = await axios.get(link);
 		const $ = cheerio.load(body);
-		const pizzaElems = $(config.elemSelector);
+		const pizzaElems = $(pizzaPlaceConfig.elemSelector);
 		const pizzaData = [];
 		pizzaElems.each((i, el) => {
 			pizzaData.push(getDataFromOnePizza($(el)));
@@ -50,13 +51,13 @@ const getPizzasFromOneIteration = async link => {
 };
 
 const buildPizzaData = async ($, shownPerPage) => {
-	const listElems = $(config.listSelector);
+	const listElems = $(pizzaPlaceConfig.listSelector);
 	let visited = 1;
 	const linksToVisit = [];
 	listElems.each((i, el) => {
 		if (i + 1 === visited + shownPerPage) {
 			const link = $(el).find('a').attr('href');
-			linksToVisit.push(`${config.baseUrl}${link}`);
+			linksToVisit.push(`${pizzaPlaceConfig.baseUrl}${link}`);
 			visited += shownPerPage;
 		}
 	});
@@ -68,9 +69,9 @@ const buildPizzaData = async ($, shownPerPage) => {
 
 const scrape = async () => {
 	try {
-		const { data: body } = await axios.get(config.baseUrl);
+		const { data: body } = await axios.get(pizzaPlaceConfig.baseUrl);
 		const $ = cheerio.load(body);
-		const shownPerPage = getCountOf($, config.elemSelector);
+		const shownPerPage = getCountOf($, pizzaPlaceConfig.elemSelector);
 		const data = await buildPizzaData($, shownPerPage);
 		return data;
 

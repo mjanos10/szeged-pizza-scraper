@@ -1,16 +1,18 @@
 'use strict';
 
+process.env['NODE_CONFIG_DIR'] = __dirname + '/config';
+
 const express = require('express');
 const mongoose = require('mongoose');
 const GracefulShutdownManager = require('@moebius/http-graceful-shutdown').GracefulShutdownManager;
 const shutdown = require('./shutdown');
-const config = require('./config');
+const config = require('config');
 const { validateScraper } = require('./middlewares');
 const scrapers = require('./scrapers');
 
 const app = express();
 
-mongoose.connect(config.database.url, { useNewUrlParser: true });
+mongoose.connect(config.get('database.url'), { useNewUrlParser: true });
 
 app.get('/', (req, res) => res.send('Hello World!'));
 

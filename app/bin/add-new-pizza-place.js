@@ -2,7 +2,7 @@
 
 const inquirer = require('inquirer');
 const mongoose = require('mongoose');
-const config = require('../config');
+const config = require('config');
 const shutdown = require('../shutdown');
 
 const utils = require('../utils/utils');
@@ -51,7 +51,7 @@ const prompts = [
 
 const run = async () => {
 	try {
-		await mongoose.connect(config.database.url, { useNewUrlParser: true });
+		await mongoose.connect(config.get('database.url'), { useNewUrlParser: true });
 
 		const answers = await inquirer.prompt(prompts);
 
