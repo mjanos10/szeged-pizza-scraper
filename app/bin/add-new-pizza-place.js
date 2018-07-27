@@ -6,7 +6,7 @@ const config = require('config');
 const shutdown = require('../shutdown');
 
 const utils = require('../utils/utils');
-const PizzaPlaceModel = require('../models/pizza-place');
+const PizzaPlaceModel = require('../models/pizza-place-model');
 
 shutdown.registerListeners();
 

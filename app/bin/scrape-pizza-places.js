@@ -6,8 +6,8 @@ const config = require('config');
 const shutdown = require('../shutdown');
 const scrapers = require('../scrapers');
 
-const PizzaPlaceModel = require('../models/pizza-place');
-const PizzaModel = require('../models/pizza');
+const PizzaPlaceModel = require('../models/pizza-place-model');
+const PizzaModel = require('../models/pizza-model');
 
 shutdown.registerListeners();
 
@@ -44,7 +44,9 @@ const scrapeAndSaveOnePizzaPlace = async pizzaPlace => {
 	});
 
 	console.log(`Removing pizzas for pizza place ${pizzaPlace.name}.`);
-	await PizzaModel.deleteMany({ pizzaPlace: pizzaPlace._id });
+	await PizzaModel.deleteMany({
+		pizzaPlace: pizzaPlace._id,
+	});
 
 	console.log(`Adding newly scraped pizzas for pizza place ${pizzaPlace.name}.`);
 	await PizzaModel.insertMany(pizzasToSave);
@@ -62,7 +64,9 @@ const run = async () => {
 	try {
 		await mongoose.connect(
 			config.get('database.url'),
-			{ useNewUrlParser: true }
+			{
+				useNewUrlParser: true,
+			}
 		);
 
 		const allPizzaPlaces = await PizzaPlaceModel.find();
