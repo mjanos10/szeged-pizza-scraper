@@ -22,5 +22,10 @@
     "inquirer": "^6.0.0",
     "mongoose": "^5.2.4",
     "xml-js": "^1.6.7"
+  },
+  "devDependencies": {
+    "eslint-config-prettier": "^2.9.0",
+    "eslint-plugin-prettier": "^2.6.2",
+    "prettier": "1.13.7"
   }
 }

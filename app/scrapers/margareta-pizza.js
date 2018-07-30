@@ -19,7 +19,6 @@ const getListOfPizzaUrls = xmlAsArray => {
 
 const scrape = async () => {
 	try {
-		
 		const { data } = await axios.get(pizzaPlaceConfig.sitemapUrl);
 		const result = xmlToJs.xml2js(data, { compact: true, ignoreAttributes: true, ignoreDeclaration: true });
 		const pizzaUrls = getListOfPizzaUrls(result);

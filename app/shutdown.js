@@ -29,18 +29,19 @@ const shutdownAll = server => {
 };
 
 const registerListeners = server => {
-	
 	const callback = (evt, error) => {
 		console.log(`Running shutdown after event ${evt}`);
 		if (error) {
 			console.error(error);
 		}
-		shutdownAll(server).then(() => {
-			console.log(`Shutdown finished after ${evt}`);
-		}).catch(err => {
-			console.error(`An error occured during shutdown from event ${evt}`);
-			console.error(err);
-		});
+		shutdownAll(server)
+			.then(() => {
+				console.log(`Shutdown finished after ${evt}`);
+			})
+			.catch(err => {
+				console.error(`An error occured during shutdown from event ${evt}`);
+				console.error(err);
+			});
 	};
 
 	process.on('SIGTERM', err => callback('SIGTERM', err));
@@ -53,5 +54,5 @@ module.exports = {
 	registerListeners,
 	shutdownAll,
 	shutdownDatabase,
-	shutdownServer
+	shutdownServer,
 };
